@@ -41,7 +41,7 @@ function createRestartButton() {
     result.appendChild(button);
 }
 
-function checkElements(element1, element2, element3) {
+function areEqual(element1, element2, element3) {
     return element1.innerText !== "" && element1.innerText === element2.innerText
     && element1.innerText === element3.innerText
 }
@@ -57,7 +57,7 @@ function checkWinner() {
         const a = winnerCombinations[i][0];
         const b = winnerCombinations[i][1];
         const c = winnerCombinations[i][2];
-        if (checkElements(element[a], element[b], element[c])) {
+        if (areEqual(element[a], element[b], element[c])) {
             if ((turn - 1) % 2) {
                 result.innerText = "Player 2 wins";
             } else {
