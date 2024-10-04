@@ -11,23 +11,24 @@ function addAttributes(element, attributes) {
 
 function createGame() {
     const displayPlayers = addAttributes(document.createElement("div"),
-        ["style", "font-size:25px; width:500px; text-align:right; margin-right:15px"]);
+        ["style", "font-size:25px; width:500px; text-align:right;" +
+        "margin-right:15px; font-weight:bold"]);
     container.appendChild(displayPlayers);
-    const player1 = document.createElement("span");
-    player1.innerHTML = "<strong>X - Player 1</strong> <br>";
-    const player2 = document.createElement("span");
-    player2.innerHTML = "<strong>O - Player 2</strong>";
+    const player1 = document.createElement("p");
+    player1.innerText = "X - Player 1";
+    const player2 = document.createElement("p");
+    player2.innerText = "O - Player 2";
     displayPlayers.appendChild(player1);
     displayPlayers.appendChild(player2);
     const gameField = addAttributes(document.createElement("div"),
         ["style", "display:grid; grid-template-columns:repeat(3, 100px)"]);
     container.appendChild(gameField);
     for (let i = 0; i < 3; ++i) {
-        for (let j = 0, noButton = 0; j < 3; ++j, ++noButton) {
+        for (let j = 0; j < 3; ++j) {
             const button = addAttributes(document.createElement("button"),
                 ["type", "button", "class", "btn btn-outline-secondary", "style",
-                "width:100px; height:100px; font-size:60px; color:black",
-                    "onclick", "markButton(this)"]);
+                "width:100px; height:100px; font-size:60px; color:black;" +
+                "font-weight:bold", "onclick", "markButton(this)"]);
             gameField.appendChild(button);
         }
     }
@@ -42,39 +43,37 @@ function createRestartButton() {
 
 function checkWinner() {
     const element = document.getElementsByClassName("btn btn-outline-secondary");
-    if ((element[0].innerHTML !== "" && element[0].innerHTML === element[1].innerHTML
-            && element[0].innerHTML === element[2].innerHTML)
-        || (element[3].innerHTML !== "" && element[3].innerHTML === element[4].innerHTML
-            && element[3].innerHTML === element[5].innerHTML)
-        || (element[6].innerHTML !== "" && element[6].innerHTML === element[7].innerHTML
-            && element[6].innerHTML === element[8].innerHTML)
-        || (element[0].innerHTML !== "" && element[0].innerHTML === element[3].innerHTML
-            && element[0].innerHTML === element[6].innerHTML)
-        || (element[1].innerHTML !== "" && element[1].innerHTML === element[4].innerHTML
-            && element[1].innerHTML === element[7].innerHTML)
-        || (element[2].innerHTML !== "" && element[2].innerHTML === element[5].innerHTML
-            && element[2].innerHTML === element[8].innerHTML)
-        || (element[0].innerHTML !== "" && element[0].innerHTML === element[4].innerHTML
-            && element[0].innerHTML === element[8].innerHTML)
-        || (element[2].innerHTML !== "" && element[2].innerHTML === element[4].innerHTML
-            && element[2].innerHTML === element[6].innerHTML)) {
-        if ((turn - 1) % 2) {
-            result.innerHTML = "Player 2 wins<br>";
-        } else {
-            result.innerHTML = "Player 1 wins<br>";
+    const winnerCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6],
+    ];
+    let winnerFound = false;
+    for (let i = 0; i < winnerCombinations.length; ++i) {
+        const a = winnerCombinations[i][0];
+        const b = winnerCombinations[i][1];
+        const c = winnerCombinations[i][2];
+        if (element[a].innerText !== "" && element[a].innerText === element[b].innerText
+            && element[a].innerText === element[c].innerText) {
+            if ((turn - 1) % 2) {
+                result.innerText = "Player 2 wins";
+            } else {
+                result.innerText = "Player 1 wins";
+            }
+            winnerFound = true;
+            createRestartButton();
         }
-        createRestartButton();
-    } else if (turn === 9) {
-        result.innerHTML = "It's a draw<br>";
+    }
+    if (!winnerFound && turn === 9) {
+        result.innerText = "It's a draw";
         createRestartButton();
     }
 }
 
 function markButton(button) {
     if (!(turn % 2)) {
-        button.innerHTML = "<strong>X</strong>";
+        button.innerText = "X";
     } else {
-        button.innerHTML = "<strong>O</strong>";
+        button.innerText = "O";
     }
     ++turn;
     button.setAttribute("disabled", "true");
